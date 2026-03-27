@@ -1,5 +1,5 @@
-# NaiveUI-Template
-> Vue3/NaiveUI/UnoCSS Template
+# OpsClaw-Frontend
+> OpsClaw-Frontend
 
 This template should help get you started developing with Vue 3 in Vite.
 

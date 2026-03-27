@@ -1,11 +1,11 @@
 {
-  "name": "naive-ui-template",
-  "description": "Vue3/NaiveUI/UnoCSS Template",
+  "name": "ops-claw_frontend",
+  "description": "OpsClaw-Frontend",
   "version": "0.2.0",
   "private": true,
   "type": "module",
   "repository": {
-    "url": "https://github.com/yuanlee301415/NaiveUI-Template"
+    "url": "https://github.com/yuanlee301415/OpsClaw-Frontend"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
@@ -17,7 +17,7 @@
     "preview:dist": "vite preview",
     "lint": "eslint . --fix --cache",
     "format": "prettier --write --experimental-cli src/",
-    "server": "npx json-server server/db.json5 --port 3001",
+    "server": "npx json-server server/db.json5 --port 3901",
     "ver": "node build/scripts/update-internal-version.js",
     "prepare": "simple-git-hooks"
   },
