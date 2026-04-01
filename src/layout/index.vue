@@ -23,4 +23,8 @@ defineOptions({ name: 'LayoutIndex' })
   </n-layout>
 </template>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.layout-container {
+  background-color: var(--bg);
+}
+</style>

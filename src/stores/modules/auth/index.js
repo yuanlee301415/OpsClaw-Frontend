@@ -4,17 +4,14 @@
 
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
-import { StoreId } from '@/enum/index.js'
-import { loginApi, getAuthUserApi } from '@/api/rights.js'
+import { StoreId, Role } from '@/enum/index.js'
 import { useRouteStore } from '@/stores/index.js'
 import { AuthUser } from '@/models/AuthUser.js'
-import { getAuthToken, setAuthToken, removeAuthToken } from '@/utils/authToken.js'
+import { setAuthToken, removeAuthToken } from '@/utils/authToken.js'
 
 export const useAuthStore = defineStore(StoreId.Auth, () => {
   const user = reactive(
     new AuthUser({
-      id: '',
-      login: '',
       name: '',
       roles: null,
     }),
@@ -23,9 +20,10 @@ export const useAuthStore = defineStore(StoreId.Auth, () => {
   const authStore = useAuthStore()
   const routeStore = useRouteStore()
 
-  async function login({ login }) {
-    const res = await loginApi(login)
-    setAuthToken(res.token)
+  async function login({ wsUrl, token }) {
+    // const res = await loginApi(login)
+    localStorage.setItem('wsUrl', wsUrl)
+    setAuthToken(token)
     routeStore.resetRoutes()
   }
 
@@ -36,8 +34,14 @@ export const useAuthStore = defineStore(StoreId.Auth, () => {
   }
 
   async function getAuthUser() {
-    const token = getAuthToken()
-    Object.assign(user, new AuthUser(await getAuthUserApi(token)))
+    // Object.assign(user, new AuthUser(await getAuthUserApi(token)))
+    Object.assign(
+      user,
+      new AuthUser({
+        name: 'Admin',
+        roles: [Role.Admin],
+      }),
+    )
     console.log('getAuthUser>user:', user)
     return user
   }
