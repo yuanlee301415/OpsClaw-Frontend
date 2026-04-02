@@ -14,7 +14,7 @@ defineOptions({ name: 'LayoutContent' })
 
 <style scoped lang="less">
 .layout-content {
-  padding: 20px;
-  background-color: var(--color-background);
+  padding: 16px 20px 32px;
+  background-color: var(--bg-content);
 }
 </style>

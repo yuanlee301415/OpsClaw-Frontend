@@ -9,17 +9,14 @@ const authStore = useAuthStore()
 const routeStore = useRouteStore()
 
 const rules = {
-  wsUrl: {
-    required: true,
-  },
-  token: {
+  userName: {
     required: true,
   },
 }
 
 const formData = reactive({
-  wsUrl: 'ws://127.0.0.1:18789',
-  token: '388732ba5130f27a0fe4c6fcbb8908d3372b34a6b75025eb',
+  userName: '',
+  password: '',
 })
 
 const loading = ref(false)
@@ -43,16 +40,16 @@ async function handleSubmit() {
         </n-flex>
 
         <n-form ref="formRef" :model="formData" :rules="rules" size="large" class="mt-10" @keyup.enter="handleSubmit">
-          <n-form-item label="WebSocket URL" path="wsUrl">
-            <n-input v-model:value="formData.wsUrl" :allow-input="noSideSpace" maxlength="100" />
+          <n-form-item label="用户名" path="userName">
+            <n-input v-model:value="formData.userName" :allow-input="noSideSpace" placeholder="请输入用户名" maxlength="10" />
           </n-form-item>
 
-          <n-form-item label="网关令牌" path="token">
-            <n-input v-model:value="formData.token" :allow-input="noSideSpace" show-password-on="click" type="password" maxlength="48" />
+          <n-form-item label="密码" path="password">
+            <n-input v-model:value="formData.password" :allow-input="noSideSpace" placeholder="密码随便填" type="password" maxlength="20" />
           </n-form-item>
         </n-form>
 
-        <n-button :loading="loading" type="error" round block @click="handleSubmit"> 连接 </n-button>
+        <n-button :loading="loading" type="error" round block @click="handleSubmit">登录</n-button>
       </div>
     </n-card>
   </div>

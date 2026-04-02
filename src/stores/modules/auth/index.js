@@ -7,7 +7,7 @@ import { reactive } from 'vue'
 import { StoreId, Role } from '@/enum/index.js'
 import { useRouteStore } from '@/stores/index.js'
 import { AuthUser } from '@/models/AuthUser.js'
-import { setAuthToken, removeAuthToken } from '@/utils/authToken.js'
+import { setAuthToken, removeAuthToken, getAuthToken } from '@/utils/authToken.js'
 
 export const useAuthStore = defineStore(StoreId.Auth, () => {
   const user = reactive(
@@ -20,10 +20,10 @@ export const useAuthStore = defineStore(StoreId.Auth, () => {
   const authStore = useAuthStore()
   const routeStore = useRouteStore()
 
-  async function login({ wsUrl, token }) {
+  async function login({ userName }) {
     // const res = await loginApi(login)
-    localStorage.setItem('wsUrl', wsUrl)
-    setAuthToken(token)
+    user.name = userName
+    setAuthToken(userName)
     routeStore.resetRoutes()
   }
 
@@ -35,13 +35,10 @@ export const useAuthStore = defineStore(StoreId.Auth, () => {
 
   async function getAuthUser() {
     // Object.assign(user, new AuthUser(await getAuthUserApi(token)))
-    Object.assign(
-      user,
-      new AuthUser({
-        name: 'Admin',
-        roles: [Role.Admin],
-      }),
-    )
+    Object.assign(user, {
+      name: getAuthToken(),
+      roles: [Role.Admin],
+    })
     console.log('getAuthUser>user:', user)
     return user
   }

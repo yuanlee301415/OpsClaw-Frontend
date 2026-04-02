@@ -55,7 +55,8 @@ function handleClickMenu(path) {
 <style scoped lang="less">
 aside {
   width: calc(var(--sider-width) - 10px);
-
+  background-color: color-mix(in srgb, var(--panel) 98%, white 2%);
+  border-right: 1px solid color-mix(in srgb, var(--border) 74%, transparent);
   &.collapsed {
     width: 60px;
   }

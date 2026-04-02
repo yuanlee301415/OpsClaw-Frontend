@@ -2,7 +2,6 @@
 import Header from './modules/Header/index.vue'
 import Sider from './modules/Sider/index.vue'
 import Content from './modules/Content/index.vue'
-import Footer from './modules/Footer/index.vue'
 
 defineOptions({ name: 'LayoutIndex' })
 </script>
@@ -16,8 +15,6 @@ defineOptions({ name: 'LayoutIndex' })
 
       <div class="layout-right flex-1 flex flex-col overflow-hidden">
         <Content />
-
-        <Footer />
       </div>
     </div>
   </n-layout>

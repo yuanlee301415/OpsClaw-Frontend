@@ -33,7 +33,7 @@ export function createPermissionGuard(router) {
       return true
     }
 
-    // console.warn('未授权')
+    console.warn('未授权')
     try {
       await authStore.getAuthUser()
       routeStore.addDynamicRoutes(authStore.user.roles)

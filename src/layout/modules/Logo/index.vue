@@ -10,9 +10,3 @@ const NAME = import.meta.env.VITE_APP_TITLE
     <n-h3 class="m-0">{{ NAME }}</n-h3>
   </n-flex>
 </template>
-
-<style scoped lang="less">
-.header-logo {
-  width: calc(var(--sider-width) - 10px);
-}
-</style>

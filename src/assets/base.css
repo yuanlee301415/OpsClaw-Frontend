@@ -36,6 +36,9 @@
   --section-gap: 160px;
 
   --bg: #f8f9fa;
+  --panel: #f8f9fa;
+  --bg-content: #f1f3f5;
+  --border: #e5e5ea;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -75,7 +75,7 @@ function handleSelect(key) {
 <style scoped lang="less">
 header {
   height: 56px;
-  padding: 0 10px;
-  background-color: var(--color-background-mute);
+  padding: 0 24px;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
 }
 </style>
