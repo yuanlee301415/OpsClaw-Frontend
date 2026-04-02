@@ -31,6 +31,7 @@ export default defineConfig({
     'i-mdi:cog-outline',
     'i-mdi:grid-large',
     'i-mdi:block-helper',
+    'i-mdi:chat-bubble-outline',
   ],
 
   // 快捷方式
