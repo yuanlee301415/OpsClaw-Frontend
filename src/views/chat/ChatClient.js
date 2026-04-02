@@ -31,7 +31,8 @@ export class ChatClient {
   /**
    * @param {string} method - 方法名
    * @param {object} params - 请求参数
-   * @param {string} content - 问题内容
+   * @param {string} params.content - 问题内容
+   * @param {string} params.chat_id - 会话 Id
    */
   request(method, params) {
     // 检查连接状态
