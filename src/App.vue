@@ -1,10 +1,7 @@
 <script setup>
-import { onMounted, computed } from 'vue'
+import { onMounted } from 'vue'
 import { RouterView } from 'vue-router'
-import { darkTheme, useOsTheme, zhCN, dateZhCN } from 'naive-ui'
-
-const osTheme = useOsTheme()
-const theme = computed(() => (osTheme.value === 'dark' ? darkTheme : null))
+import { zhCN, dateZhCN } from 'naive-ui'
 
 onMounted(() => {
   const leftStyle = 'background-color:#2f353a;color:#fff;padding:0 5px;line-height:1.2rem;border-radius:0.2rem 0 0 0.2rem;'
@@ -18,7 +15,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <n-config-provider :theme="theme" :locale="zhCN" :date-locale="dateZhCN" class="h-full">
+  <n-config-provider :locale="zhCN" :date-locale="dateZhCN" class="h-full">
     <n-notification-provider>
       <RouterView />
     </n-notification-provider>
