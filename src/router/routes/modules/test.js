@@ -3,9 +3,6 @@ import { Layout } from '@/router/constants.js'
 export const testRoutes = {
   path: '/test',
   name: 'Test',
-  meta: {
-    title: 'Test',
-  },
   component: Layout,
   children: [
     {

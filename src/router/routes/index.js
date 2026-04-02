@@ -1,4 +1,4 @@
-import { Layout, NOT_FOUND_ROUTE_NAME, NOT_FOUND_PAGE } from '@/router/constants.js'
+import { Layout, NOT_FOUND_ROUTE_NAME, NOT_FOUND_PAGE, HOME_ROUTE_NAME } from '@/router/constants.js'
 import { basicRoutes } from '@/router/routes/basic.js'
 import { testRoutes } from '@/router/routes/modules/test.js'
 
@@ -10,6 +10,7 @@ export const staticRoutes = [
   {
     path: '/',
     redirect: '/chat',
+    name: HOME_ROUTE_NAME,
   },
 
   {
@@ -28,7 +29,6 @@ export const staticRoutes = [
   {
     path: '/claw',
     name: 'Claw',
-    meta: { title: '聊天', icon: 'i-mdi:chat-bubble-outline' },
     component: Layout,
     children: [
       {
