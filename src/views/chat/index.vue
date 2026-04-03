@@ -7,8 +7,22 @@ import ChatMessages from './modules/ChatMessages/index.vue'
 
 defineOptions({ name: 'ChatPage' })
 
+const chatId = (function () {
+  const id = sessionStorage.getItem('OpsClaw.chatId') ?? generateUUID()
+  sessionStorage.setItem('OpsClaw.chatId', id)
+  console.log('chatId:', id)
+  return id
+})()
+
 const client = new ChatClient({
   url: import.meta.env.VITE_WS_URL,
+  chatId,
+  onHello() {
+    console.warn('WS 连接成功！', new Date())
+  },
+  onEvent(data) {
+    console.log('onEvent>data:', data)
+  },
 })
 
 const questionContent = ref('Who are you?')
@@ -20,25 +34,25 @@ const messages = reactive([
       "I am nanobot 🐈, a personal AI assistant. I am here to help you with any tasks or questions you may have. Whether it's managing your schedule, providing information, or assisting with technical tasks, I'm here to support you. How can I assist you today?",
   },
 ])
-const chatId = (function () {
-  const id = sessionStorage.getItem('OpsClaw.chatId') ?? generateUUID()
-  sessionStorage.setItem('OpsClaw.chatId', id)
-  console.log('chatId:', id)
-  return id
-})()
 
 client.start()
 
-function onSend(question) {
-  client.request('chat.question', {
-    chat_id: chatId,
+async function onSend(question) {
+  const msgId = generateUUID()
+  const message = reactive({
+    msgId,
+    question,
+    answer: '',
+    _pending: true,
+  })
+  messages.push(message)
+  const { ok, method, timestamp, content } = await client.request(ChatClient.CHAT_QUESTION_METHOD, {
+    msgId,
     content: question,
   })
-
-  messages.push({
-    id: generateUUID(),
-    question,
-  })
+  console.log('answer>res:', { ok, method, timestamp, content })
+  message._pending = false
+  message.answer = content
 }
 </script>
 
