@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { generateUUID } from '@/utils/uuid.js'
+import { ChatMessage } from '@/models/ChatMessage.js'
 import { ChatClient } from './ChatClient.js'
 import ChatInput from './modules/ChatInput/index.vue'
 import ChatMessages from './modules/ChatMessages/index.vue'
@@ -26,33 +27,49 @@ const client = new ChatClient({
 })
 
 const questionContent = ref('Who are you?')
-const messages = reactive([
-  {
+const messages = reactive(
+  ChatMessage.from([
+    /*  {
     id: 1,
-    question: 'Who are you?',
-    answer:
-      "I am nanobot 🐈, a personal AI assistant. I am here to help you with any tasks or questions you may have. Whether it's managing your schedule, providing information, or assisting with technical tasks, I'm here to support you. How can I assist you today?",
-  },
-])
+    question: {
+      content: 'Who are you?',
+      timestamp: 1775208323000
+    },
+    answer: {
+      content: '"I am nanobot 🐈, a personal AI assistant. I am here to help you with any tasks or questions you may have. Whether it\'s managing your schedule, providing information, or assisting with technical tasks, I\'m here to support you. How can I assist you today?",',
+      timestamp: 1775208325000
+    }
+  }*/
+  ]),
+)
 
 client.start()
 
-async function onSend(question) {
+async function onSend(questionContent) {
   const msgId = generateUUID()
-  const message = reactive({
-    msgId,
-    question,
-    answer: '',
-    _pending: true,
-  })
+
+  /**
+   * @type {ChatMessage}
+   */
+  const message = reactive(
+    new ChatMessage({
+      id: msgId,
+      question: {
+        content: questionContent,
+        timestamp: Date.now(),
+      },
+      _pending: true,
+    }),
+  )
   messages.push(message)
   const { ok, method, timestamp, content } = await client.request(ChatClient.CHAT_QUESTION_METHOD, {
     msgId,
-    content: question,
+    content: questionContent,
   })
   console.log('answer>res:', { ok, method, timestamp, content })
   message._pending = false
-  message.answer = content
+  message.answer.timestamp = Date.now()
+  message.answer.content = content
 }
 </script>
 
@@ -61,6 +78,6 @@ async function onSend(question) {
     <div class="flex-1">
       <ChatMessages :messages="messages" />
     </div>
-    <ChatInput v-model:question="questionContent" @send="onSend" />
+    <ChatInput v-model:questionContent="questionContent" @send="onSend" />
   </div>
 </template>

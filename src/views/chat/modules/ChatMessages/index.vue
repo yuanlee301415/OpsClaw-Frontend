@@ -3,9 +3,13 @@ import SvgIcon from '@/components/SvgIcon/index.vue'
 
 defineOptions({ name: 'ChatMessage' })
 
-defineProps({
+/**
+ * @type {ChatMessage[]}
+ */
+const { messages } = defineProps({
   messages: Array,
 })
+console.log('messages:', messages)
 </script>
 
 <template>
@@ -14,9 +18,11 @@ defineProps({
       <li v-for="msg of messages" :key="msg.id">
         <div class="chat-question flex justify-end gap-x-4 mb-4 ml-1 mr-4">
           <div class="chat-question_group flex flex-col gap-y-2">
-            <div class="chat-question_text px-4 py-2">{{ msg.question }}</div>
+            <div class="chat-question_text px-4 py-2">{{ msg.question.content }}</div>
 
-            <div class="chat-question_role text-right text-[12px] font-300"><b>You</b>&emsp;<time>12:55</time></div>
+            <div class="chat-question_role text-right text-[12px] font-300">
+              <b>You</b>&emsp;<time>{{ msg.question.timeString }}</time>
+            </div>
           </div>
 
           <div class="chat-avatar mt-auto mb-1 size-[36px] border flex-center">
@@ -35,10 +41,12 @@ defineProps({
                 <span class="chat-reading-indicator__dots"> <span></span><span></span><span></span> </span>
               </div>
               <div v-else class="chat-markdown px-2">
-                {{ msg.answer }}
+                {{ msg.answer.content }}
               </div>
             </div>
-            <div class="chat-answer_role text-[12px] font-300"><b>Claw</b>&emsp;<time>17:01</time></div>
+            <div v-if="!msg._pending" class="chat-answer_role text-[12px] font-300">
+              <b>Claw</b>&emsp;<time>{{ msg.answer.timeString }}</time>
+            </div>
           </div>
         </div>
       </li>

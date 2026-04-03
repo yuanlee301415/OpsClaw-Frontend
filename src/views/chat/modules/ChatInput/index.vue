@@ -1,17 +1,17 @@
 <script setup>
 defineOptions({ name: 'ChatInput' })
 
-const question = defineModel('question')
+const questionContent = defineModel('questionContent')
 const emits = defineEmits(['send'])
 
 function handleSend() {
-  emits('send', question.value)
+  emits('send', questionContent.value)
 }
 </script>
 
 <template>
   <div class="chat-input-container relative flex flex-col">
-    <textarea v-model="question"></textarea>
+    <textarea v-model="questionContent"></textarea>
     <n-button @click="handleSend">Send</n-button>
   </div>
 </template>
