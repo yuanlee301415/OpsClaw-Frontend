@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, useTemplateRef } from 'vue'
 import { generateUUID } from '@/utils/uuid.js'
 import { ChatMessage } from '@/models/ChatMessage.js'
 import { ChatClient } from './ChatClient.js'
@@ -42,6 +42,8 @@ const messages = reactive(
   }*/
   ]),
 )
+const chatMessagesRef = useTemplateRef('chatMessagesRef')
+const pending = ref(false)
 
 client.start()
 
@@ -61,7 +63,11 @@ async function onSend(questionContent) {
       _pending: true,
     }),
   )
+
+  pending.value = true
   messages.push(message)
+  chatMessagesRef.value?.scrollIntoView()
+
   const { ok, method, timestamp, content } = await client.request(ChatClient.CHAT_QUESTION_METHOD, {
     msgId,
     content: questionContent,
@@ -70,14 +76,16 @@ async function onSend(questionContent) {
   message._pending = false
   message.answer.timestamp = Date.now()
   message.answer.content = content
+  pending.value = false
+  chatMessagesRef.value?.scrollIntoView()
 }
 </script>
 
 <template>
-  <div class="chat-page h-full flex flex-col pt-2 px-4 pb-8">
-    <div class="flex-1">
-      <ChatMessages :messages="messages" />
+  <div class="chat-page h-full flex flex-col gap-row-4 pt-2 px-4 pb-8">
+    <div class="flex-1 overflow-y-auto">
+      <ChatMessages :messages="messages" ref="chatMessagesRef" />
     </div>
-    <ChatInput v-model:questionContent="questionContent" @send="onSend" />
+    <ChatInput v-model:questionContent="questionContent" :disabled="pending" @send="onSend" />
   </div>
 </template>

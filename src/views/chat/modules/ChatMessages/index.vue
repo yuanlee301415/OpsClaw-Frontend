@@ -1,4 +1,5 @@
 <script setup>
+import { useTemplateRef, nextTick } from 'vue'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 
 defineOptions({ name: 'ChatMessage' })
@@ -10,6 +11,21 @@ const { messages } = defineProps({
   messages: Array,
 })
 console.log('messages:', messages)
+
+const chatMessagesBoxBottomRef = useTemplateRef('chatMessagesBoxBottomRef')
+
+function scrollIntoView() {
+  nextTick(() => {
+    chatMessagesBoxBottomRef.value?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+    })
+  })
+}
+
+defineExpose({
+  scrollIntoView,
+})
 </script>
 
 <template>
@@ -51,6 +67,7 @@ console.log('messages:', messages)
         </div>
       </li>
     </ul>
+    <div ref="chatMessagesBoxBottomRef"></div>
   </div>
 </template>
 
