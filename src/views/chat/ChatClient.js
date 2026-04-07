@@ -10,6 +10,7 @@ const CONNECT_REQ_METHOD = 'connect.req'
 // 发送问题-方法名
 const CHAT_QUESTION_METHOD = 'chat.question'
 
+// 接收回答-方法名
 const CHAT_ANSWER_METHOD = 'chat.answer'
 
 export class ChatClient {
@@ -189,7 +190,24 @@ export class ChatClient {
     }
 
     // 处理响应消息
-    this.opts.onEvent(parsed)
+    const {
+      method,
+      metadata: { runId },
+    } = parsed
+
+    if (method === CHAT_ANSWER_METHOD) {
+      this.opts.onEvent(parsed)
+      return
+    }
+
+    const pending = this.#pending.get(runId)
+    if (!pending) return
+    this.#pending.delete(runId)
+    if (parsed.ok) {
+      pending.resolve(parsed)
+    } else {
+      pending.reject(parsed)
+    }
   }
 
   /**
