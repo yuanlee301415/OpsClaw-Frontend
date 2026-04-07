@@ -93,19 +93,11 @@ function onSend(questionContent) {
 
   messages.push(message)
   chatMessagesRef.value?.scrollIntoView()
-
-  client
-    .request(ChatClient.CHAT_QUESTION_METHOD, {
-      msgId,
-      content: questionContent,
-    })
-    .then()
-  /*  console.log('answer>res:', { ok, method, content, metadata })
-  message._pending = false
-  message.answer.timestamp = Date.now()
-  message.answer.content = content
-  pending.value = false
-  chatMessagesRef.value?.scrollIntoView()*/
+  progress.value = true
+  void client.request(ChatClient.CHAT_QUESTION_METHOD, {
+    msgId,
+    content: questionContent,
+  })
 }
 </script>
 
