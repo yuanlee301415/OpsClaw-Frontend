@@ -1,0 +1,109 @@
+// 本地插件样式类名
+// 类名来自于：当前文件目录下的 `./constants.js` 文件
+// 调整类名需要同步修改
+.markdown-body {
+  .invisible {
+    display: none;
+  }
+
+  // 表格
+  .table-container {
+    table {
+      table-layout: fixed;
+      overflow-x: auto;
+      width: 100%;
+      margin-bottom: 0.5rem;
+
+      thead,
+      tbody {
+        white-space: nowrap;
+      }
+    }
+
+    .pagination-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+
+      button,
+      a {
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0;
+        height: 2rem;
+        line-height: 2rem;
+        min-width: 2rem;
+        text-align: center;
+        color: #666;
+        background-color: transparent;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        margin: 0 3px;
+
+        &:not(:disabled, .active):hover {
+          background-color: #f8f8f8;
+        }
+      }
+
+      button {
+        line-height: 1.8rem;
+      }
+
+      span {
+        margin: 0 3px;
+      }
+
+      .pagination-button-container {
+        display: flex;
+        flex-wrap: wrap;
+
+        a {
+          &.active {
+            cursor: pointer;
+            font-weight: 600;
+            border-color: #cfcfcf;
+            background-color: #f8f8f8;
+          }
+        }
+      }
+
+      .pagination-prev-button,
+      .pagination-next-button {
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+
+  // 代码块
+  .code-block-container {
+    position: relative;
+    overflow: hidden;
+
+    .code-tool-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #efeffb;
+      height: 36px;
+      margin: -16px -16px 16px;
+      padding: 0 16px;
+    }
+
+    code {
+      display: block;
+      overflow: auto;
+
+      .code-line {
+        i {
+          font-style: normal;
+          display: inline-block;
+          min-width: 2.5em;
+          opacity: 0.6;
+        }
+      }
+    }
+  }
+}

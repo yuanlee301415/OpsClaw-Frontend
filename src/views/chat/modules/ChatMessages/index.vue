@@ -1,6 +1,7 @@
 <script setup>
 import { useTemplateRef, nextTick } from 'vue'
 import SvgIcon from '@/components/SvgIcon/index.vue'
+import Markdown from '@/components/Markdown/index.js'
 
 defineOptions({ name: 'ChatMessage' })
 
@@ -57,7 +58,7 @@ defineExpose({
                 <span class="chat-reading-indicator__dots"> <span></span><span></span><span></span> </span>
               </div>
               <div v-else class="chat-markdown px-2">
-                {{ msg.answer.content }}
+                <Markdown :text="msg.answer.content" />
               </div>
             </div>
             <div v-if="!msg._pending" class="chat-answer_role text-[12px] font-300">
@@ -102,7 +103,7 @@ defineExpose({
   .chat-answer_group {
     max-width: min(1000px, 70%);
     .chat-answer_text {
-      background-color: var(--bg);
+      background-color: var(--card);
       border-radius: var(--radius-md);
       border: 1px solid var(--border);
       box-shadow: inset 0 1px 0 var(--card-highlight);

@@ -1,0 +1,45 @@
+// 第三方插件样式类名
+// 不可修改类名
+.markdown-body {
+  .contains-task-list {
+    li {
+      list-style-type: none;
+    }
+  }
+
+  .footnote-ref {
+    span {
+      color: #0969da;
+      cursor: pointer;
+      text-decoration: underline;
+
+      &:hover {
+        color: #2c2c73;
+      }
+    }
+  }
+
+  .footnotes {
+    .footnote-backref {
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .iframe-container {
+    height: 700px;
+    overflow: hidden;
+    border: 1px solid lightgray;
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border: none;
+    }
+  }
+}
