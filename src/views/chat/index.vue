@@ -5,6 +5,7 @@ import { ChatMessage } from '@/models/ChatMessage.js'
 import { ChatClient } from './ChatClient.js'
 import ChatInput from './modules/ChatInput/index.vue'
 import ChatMessages from './modules/ChatMessages/index.vue'
+import ChatCards from './modules/ChatCards/index.vue'
 
 defineOptions({ name: 'ChatPage' })
 
@@ -84,7 +85,8 @@ async function onSend(questionContent) {
 <template>
   <div class="chat-page h-full flex flex-col gap-row-4 pt-2 px-4 pb-8">
     <div class="flex-1 overflow-y-auto">
-      <ChatMessages :messages="messages" ref="chatMessagesRef" />
+      <ChatMessages v-if="messages.length" :messages="messages" ref="chatMessagesRef" />
+      <ChatCards v-else />
     </div>
     <ChatInput v-model:questionContent="questionContent" :disabled="pending" @send="onSend" />
   </div>
