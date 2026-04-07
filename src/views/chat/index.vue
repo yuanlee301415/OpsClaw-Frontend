@@ -26,7 +26,7 @@ const client = new ChatClient({
   },
 })
 
-const questionContent = ref('Who are you?')
+const questionContent = ref('')
 const messages = reactive(
   ChatMessage.from([
     /*  {

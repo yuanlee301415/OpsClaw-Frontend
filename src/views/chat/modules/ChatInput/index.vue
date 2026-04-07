@@ -3,7 +3,7 @@ import SvgIcon from '@/components/SvgIcon/index.vue'
 
 defineOptions({ name: 'ChatInput' })
 
-defineProps({
+const props = defineProps({
   disabled: Boolean,
 })
 
@@ -11,14 +11,16 @@ const questionContent = defineModel('questionContent')
 const emits = defineEmits(['send'])
 
 function handleSend() {
-  emits('send', questionContent.value)
+  if (props.disabled || !questionContent.value.trim()) return
+  emits('send', questionContent.value.trim())
+  questionContent.value = ''
 }
 </script>
 
 <template>
   <div class="chat-input-container relative flex flex-col">
     <div class="chat-input_area">
-      <textarea v-model="questionContent" rows="2" placeholder="请输入问题"></textarea>
+      <textarea v-model="questionContent" rows="2" placeholder="请输入问题" @keydown.enter.prevent="handleSend"></textarea>
     </div>
     <div class="chat-input_toolbar flex items-center justify-between">
       <div class="chat-input_toolbar-left">
