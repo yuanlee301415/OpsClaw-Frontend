@@ -24,10 +24,14 @@ class Message {
     this.timestamp = timestamp
   }
 
+  /**
+   * 获取时分
+   * @return {string} `HH:MM`
+   */
   get timeString() {
     const date = new Date(this.timestamp)
     if (!date.getTime()) return ''
-    return [String(date.getMinutes()).padStart(2, '0'), String(date.getSeconds()).padStart(2, '0')].join(':')
+    return [String(date.getHours()).padStart(2, '0'), String(date.getMinutes()).padStart(2, '0')].join(':')
   }
 }
 

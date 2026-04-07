@@ -68,11 +68,11 @@ async function onSend(questionContent) {
   messages.push(message)
   chatMessagesRef.value?.scrollIntoView()
 
-  const { ok, method, timestamp, content } = await client.request(ChatClient.CHAT_QUESTION_METHOD, {
+  const { ok, method, content } = await client.request(ChatClient.CHAT_QUESTION_METHOD, {
     msgId,
     content: questionContent,
   })
-  console.log('answer>res:', { ok, method, timestamp, content })
+  console.log('answer>res:', { ok, method, content })
   message._pending = false
   message.answer.timestamp = Date.now()
   message.answer.content = content
