@@ -1,17 +1,19 @@
 <script setup>
+import { computed } from 'vue'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 
 defineOptions({ name: 'ChatInput' })
 
 const props = defineProps({
-  disabled: Boolean,
+  canSend: Boolean,
 })
 
 const questionContent = defineModel('questionContent')
 const emits = defineEmits(['send'])
+const disabledSend = computed(() => !props.canSend || !questionContent.value.trim())
 
 function handleSend() {
-  if (props.disabled || !questionContent.value.trim()) return
+  if (disabledSend.value) return
   emits('send', questionContent.value.trim())
   questionContent.value = ''
 }
@@ -47,7 +49,7 @@ function handleSend() {
             <n-icon><SvgIcon icon="i-mdi:tray-download" /></n-icon>
           </template>
         </n-button>
-        <n-button quaternary type="tertiary" size="small" :disabled="disabled" @click="handleSend">
+        <n-button quaternary type="tertiary" size="small" :disabled="disabledSend" @click="handleSend">
           <template #icon>
             <n-icon><SvgIcon local-icon="send" /></n-icon>
           </template>

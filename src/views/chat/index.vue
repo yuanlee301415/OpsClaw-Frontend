@@ -107,6 +107,6 @@ function onSend(questionContent) {
       <ChatMessages v-if="messages.length" :messages="messages" ref="chatMessagesRef" />
       <ChatCards v-else />
     </div>
-    <ChatInput v-model:questionContent="questionContent" :disabled="progress" @send="onSend" />
+    <ChatInput v-model:questionContent="questionContent" :can-send="!progress" @send="onSend" />
   </div>
 </template>
