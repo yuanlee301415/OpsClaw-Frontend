@@ -10,6 +10,8 @@ const CONNECT_REQ_METHOD = 'connect.req'
 // 发送问题-方法名
 const CHAT_QUESTION_METHOD = 'chat.question'
 
+const CHAT_ANSWER_METHOD = 'chat.answer'
+
 export class ChatClient {
   /**
    * @type {WebSocket}
@@ -37,6 +39,7 @@ export class ChatClient {
   #pending = new Map()
 
   static CHAT_QUESTION_METHOD = CHAT_QUESTION_METHOD
+  static CHAT_ANSWER_METHOD = CHAT_ANSWER_METHOD
 
   /**
    * @param {object} opts
@@ -186,17 +189,7 @@ export class ChatClient {
     }
 
     // 处理响应消息
-    const {
-      metadata: { runId },
-    } = parsed
-    const pending = this.#pending.get(runId)
-    if (!pending) return
-    this.#pending.delete(runId)
-    if (parsed.ok) {
-      pending.resolve(parsed)
-    } else {
-      pending.reject(parsed)
-    }
+    this.opts.onEvent(parsed)
   }
 
   /**

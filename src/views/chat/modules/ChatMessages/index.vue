@@ -106,6 +106,9 @@ defineExpose({
       border-radius: var(--radius-md);
       border: 1px solid var(--border);
       box-shadow: inset 0 1px 0 var(--card-highlight);
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      line-height: 1.5;
     }
   }
 }

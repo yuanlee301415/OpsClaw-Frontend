@@ -15,19 +15,7 @@ const chatId = (function () {
   console.log('chatId:', id)
   return id
 })()
-
-const client = new ChatClient({
-  url: import.meta.env.VITE_WS_URL,
-  chatId,
-  onHello() {
-    console.warn('WS 连接成功！', new Date())
-  },
-  onEvent(data) {
-    console.log('onEvent>data:', data)
-  },
-})
-
-const questionContent = ref('')
+const questionContent = ref(import.meta.env.DEV ? '查询今天的天气，并将结果以附件的形式发送给 liyuan@betamail.net' : '')
 const messages = reactive(
   ChatMessage.from([
     /*  {
@@ -44,11 +32,46 @@ const messages = reactive(
   ]),
 )
 const chatMessagesRef = useTemplateRef('chatMessagesRef')
-const pending = ref(false)
+const progress = ref(false)
+
+const client = new ChatClient({
+  url: import.meta.env.VITE_WS_URL,
+  chatId,
+  onHello() {
+    console.warn('WS 连接成功！', new Date())
+  },
+  onEvent(data) {
+    console.log('onEvent>data:', data)
+    const {
+      ok,
+      method,
+      chat_id: _chatId,
+      content,
+      metadata: { msgId, _progress, _tool_hint },
+    } = data
+    const message = messages.at(-1)
+
+    if (!ok || _chatId !== chatId || method !== ChatClient.CHAT_ANSWER_METHOD || message.id !== msgId) {
+      console.warn('onEvent:', data)
+      return
+    }
+    if (!message.answer.timestamp) {
+      message.answer.timestamp = Date.now()
+    }
+    if (_tool_hint) {
+      // Todo
+    } else {
+      message.answer.content += content
+    }
+    message._pending = false
+    progress.value = !!_progress
+    chatMessagesRef.value?.scrollIntoView()
+  },
+})
 
 client.start()
 
-async function onSend(questionContent) {
+function onSend(questionContent) {
   const msgId = generateUUID()
 
   /**
@@ -61,24 +84,28 @@ async function onSend(questionContent) {
         content: questionContent,
         timestamp: Date.now(),
       },
+      answer: {
+        content: '',
+      },
       _pending: true,
     }),
   )
 
-  pending.value = true
   messages.push(message)
   chatMessagesRef.value?.scrollIntoView()
 
-  const { ok, method, content } = await client.request(ChatClient.CHAT_QUESTION_METHOD, {
-    msgId,
-    content: questionContent,
-  })
-  console.log('answer>res:', { ok, method, content })
+  client
+    .request(ChatClient.CHAT_QUESTION_METHOD, {
+      msgId,
+      content: questionContent,
+    })
+    .then()
+  /*  console.log('answer>res:', { ok, method, content, metadata })
   message._pending = false
   message.answer.timestamp = Date.now()
   message.answer.content = content
   pending.value = false
-  chatMessagesRef.value?.scrollIntoView()
+  chatMessagesRef.value?.scrollIntoView()*/
 }
 </script>
 
@@ -88,6 +115,6 @@ async function onSend(questionContent) {
       <ChatMessages v-if="messages.length" :messages="messages" ref="chatMessagesRef" />
       <ChatCards v-else />
     </div>
-    <ChatInput v-model:questionContent="questionContent" :disabled="pending" @send="onSend" />
+    <ChatInput v-model:questionContent="questionContent" :disabled="progress" @send="onSend" />
   </div>
 </template>
