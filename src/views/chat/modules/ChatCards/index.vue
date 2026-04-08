@@ -30,7 +30,7 @@ function handleTab(tabName) {
               type="button"
               role="tab"
               aria-selected="true"
-              class="min-w-[5.5rem] rounded-xl px-4 py-2.5 text-sm font-semibold transition sm:min-w-[6.5rem] sm:px-5"
+              class="min-w-[5.5rem] rounded-xl px-1.5 py-1.5 text-sm font-semibold transition sm:min-w-[6.5rem]"
               :class="[
                 activeName === 'cj'
                   ? 'bg-violet-600 text-white shadow-md shadow-violet-900/15 ring-1 ring-violet-500/80'
@@ -44,7 +44,7 @@ function handleTab(tabName) {
               type="button"
               role="tab"
               aria-selected="false"
-              class="min-w-[5.5rem] rounded-xl px-4 py-2.5 text-sm font-semibold transition sm:min-w-[6.5rem] sm:px-5"
+              class="min-w-[5.5rem] rounded-xl px-1.5 py-1.5 text-sm font-semibold transition sm:min-w-[6.5rem]"
               :class="[
                 activeName === 'gl'
                   ? 'bg-violet-600 text-white shadow-md shadow-violet-900/15 ring-1 ring-violet-500/80'
