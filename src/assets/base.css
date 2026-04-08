@@ -73,6 +73,7 @@
   --duration-slow: 300ms;
 }
 
+/*
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: var(--vt-c-black);
@@ -86,6 +87,7 @@
     --color-text: var(--vt-c-text-dark-2);
   }
 }
+*/
 
 :root {
   font-size: 14px;

@@ -120,10 +120,11 @@ export class ChatClient {
     this.#ws.addEventListener('open', () => this.#queueConnect())
     this.#ws.addEventListener('message', (evt) => this.#handleMessage(evt.data ?? ''))
     this.#ws.addEventListener('close', (evt) => {
+      console.error('WS 连接已关闭：\n', evt)
       this.#ws = null
       this.#flushPending(new Error(`WS closed: ${JSON.stringify(evt)}`))
       this.opts.onClose?.(evt)
-      // this.#scheduleReconnect()
+      // Todo: 重连
     })
     this.#ws.addEventListener('error', (error) => {
       console.error('WS 连接失败：\n', error)

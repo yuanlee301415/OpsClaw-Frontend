@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, useTemplateRef } from 'vue'
+import { computed, reactive, ref, useTemplateRef } from 'vue'
 import { generateUUID } from '@/utils/uuid.js'
 import { ChatMessage } from '@/models/ChatMessage.js'
 import { ChatClient } from './ChatClient.js'
@@ -32,13 +32,31 @@ const messages = reactive(
   ]),
 )
 const chatMessagesRef = useTemplateRef('chatMessagesRef')
+
+/**
+ * WS 是否已连接
+ * @type {Ref<boolean>}
+ */
+const connected = ref(false)
+
+/**
+ * 处理中
+ * @type {Ref<boolean>}
+ */
 const progress = ref(false)
+
+/**
+ * 是否能发送问题
+ * @type {ComputedRef<boolean>}
+ */
+const canSend = computed(() => connected.value && !progress.value)
 
 const client = new ChatClient({
   url: import.meta.env.VITE_WS_URL,
   chatId,
   onHello() {
     console.warn('WS 连接成功！', new Date())
+    connected.value = true
   },
   onEvent(data) {
     console.log('onEvent>data:', data)
@@ -59,7 +77,7 @@ const client = new ChatClient({
       message.answer.timestamp = Date.now()
     }
     if (_tool_hint) {
-      // Todo
+      // Todo: 工具调用
     } else {
       message.answer.content += content
     }
@@ -67,11 +85,17 @@ const client = new ChatClient({
     progress.value = !!_progress
     chatMessagesRef.value?.scrollIntoView()
   },
+  onClose() {
+    connected.value = false
+    window.$message.error('WebSocket 连接失败！')
+  },
 })
 
 client.start()
 
 function onSend(questionContent) {
+  if (!canSend.value) return
+
   const msgId = generateUUID()
 
   /**
@@ -107,6 +131,6 @@ function onSend(questionContent) {
       <ChatMessages v-if="messages.length" :messages="messages" ref="chatMessagesRef" />
       <ChatCards v-else />
     </div>
-    <ChatInput v-model:questionContent="questionContent" :can-send="!progress" @send="onSend" />
+    <ChatInput v-model:questionContent="questionContent" :can-send="canSend" @send="onSend" />
   </div>
 </template>
