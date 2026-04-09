@@ -1,5 +1,4 @@
-import { createDiscreteApi, darkTheme, useOsTheme } from 'naive-ui'
-import { computed } from 'vue'
+import { createDiscreteApi } from 'naive-ui'
 
 /**
  * 挂载 Naive-ui 脱离上下文的 API
@@ -7,13 +6,7 @@ import { computed } from 'vue'
  * @see https://www.naiveui.com/zh-CN/dark/components/discrete
  */
 export function setupNaiveDiscreteApi() {
-  const osTheme = useOsTheme()
-  const configProviderPropsRef = computed(() => ({
-    theme: osTheme.value === 'dark' ? darkTheme : null,
-  }))
   const { message, dialog, notification, loadingBar } = createDiscreteApi(['message', 'dialog', 'notification', 'loadingBar'], {
-    configProviderProps: configProviderPropsRef,
-
     // 配置消息
     messageProviderProps: {
       closable: true,
