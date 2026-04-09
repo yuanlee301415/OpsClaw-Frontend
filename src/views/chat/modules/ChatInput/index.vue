@@ -70,7 +70,7 @@ function handleSend() {
     box-shadow var(--duration-fast) ease;
   &:focus-within {
     border-color: var(--border-strong);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--border-strong) 24%, transparent);
+    box-shadow: 0 0 0 2px var(--border-strong-mix-24);
   }
   .chat-input_area {
     textarea {

@@ -76,7 +76,7 @@ function handleSelect(key) {
 header {
   height: 56px;
   padding: 0 24px;
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--border) 74%, transparent);
+  background: var(--bg-mix-82);
+  border-bottom: 1px solid var(--border-mix-75);
 }
 </style>

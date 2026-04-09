@@ -125,7 +125,7 @@ defineExpose({
     .chat-group-messages {
       align-items: stretch;
       .chat-bubble {
-        border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+        border-color: var(--accent-mix);
         background: var(--accent-subtle);
       }
       .chat-group-footer {
@@ -150,7 +150,7 @@ defineExpose({
     &.chat-user {
       background: var(--accent-subtle);
       color: var(--accent);
-      border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+      border-color: var(--accent-mix);
     }
     &.chat-assistant {
       background: var(--secondary);
