@@ -38,7 +38,7 @@ const progress = ref(false)
 const canSend = computed(() => connected.value && !progress.value)
 
 const client = new ChatClient({
-  url: import.meta.env.VITE_WS_URL,
+  url: window.__CONFIG__.WS_URL,
   chatId,
   onHello() {
     console.warn('WS 连接成功！', new Date())
