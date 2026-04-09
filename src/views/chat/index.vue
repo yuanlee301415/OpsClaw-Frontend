@@ -45,42 +45,15 @@ const client = new ChatClient({
     connected.value = true
   },
   onEvent(data) {
-    console.log('onEvent>data:', data)
-    const {
-      ok,
-      method,
-      chat_id: _chatId,
-      content,
-      metadata: { msgId, _progress, _tool_hint },
-    } = data
-    const message = messages.at(-1)
-    const timestamp = Date.now()
-    if (!ok || _chatId !== chatId || method !== ChatClient.CHAT_ANSWER_METHOD || message.id !== msgId) {
-      console.warn('onEvent:', data)
+    if (!data.ok) {
+      console.error('Event>error:\n', data)
       return
     }
-
-    if (_tool_hint) {
-      // 工具调用
-      message.answers.push(
-        new Message({
-          key: [Message.ROLE_TOOL, timestamp, messages.length].join(':'),
-          role: Message.ROLE_TOOL,
-          content,
-        }),
-      )
-    } else {
-      message.answers.push(
-        new Message({
-          key: [Message.ROLE_ASSISTANT, timestamp, messages.length].join(':'),
-          role: Message.ROLE_ASSISTANT,
-          content,
-        }),
-      )
+    if (data.method === ChatClient.CHAT_ANSWER_METHOD) {
+      handleChatEvent(data)
+      return
     }
-    message._progress = !!_progress
-    progress.value = !!_progress
-    chatMessagesRef.value?.scrollIntoView()
+    console.error('未知 Event:\n', data)
   },
   onClose() {
     connected.value = false
@@ -123,6 +96,44 @@ function onSend(questionContent) {
     msgId,
     content: questionContent,
   })
+}
+
+function handleChatEvent(data) {
+  console.log('handleChatEvent:', data)
+  const {
+    chat_id: _chatId,
+    content,
+    metadata: { msgId, _progress, _tool_hint },
+  } = data
+  const message = messages.at(-1)
+  const timestamp = Date.now()
+
+  if (_chatId !== chatId || message.id !== msgId) {
+    console.error('忽略的 ChatEvent:', data)
+    return
+  }
+
+  if (_tool_hint) {
+    // 工具调用
+    message.answers.push(
+      new Message({
+        key: [Message.ROLE_TOOL, timestamp, messages.length].join(':'),
+        role: Message.ROLE_TOOL,
+        content,
+      }),
+    )
+  } else {
+    message.answers.push(
+      new Message({
+        key: [Message.ROLE_ASSISTANT, timestamp, messages.length].join(':'),
+        role: Message.ROLE_ASSISTANT,
+        content,
+      }),
+    )
+  }
+  message._progress = !!_progress
+  progress.value = !!_progress
+  chatMessagesRef.value?.scrollIntoView()
 }
 </script>
 
