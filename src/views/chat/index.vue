@@ -1,7 +1,7 @@
 <script setup>
 import { computed, reactive, ref, useTemplateRef } from 'vue'
 import { generateUUID } from '@/utils/uuid.js'
-import { ChatMessage } from '@/models/ChatMessage.js'
+import { ChatMessage, Message } from '@/models/ChatMessage.js'
 import { ChatClient } from './ChatClient.js'
 import ChatInput from './modules/ChatInput/index.vue'
 import ChatMessages from './modules/ChatMessages/index.vue'
@@ -16,21 +16,7 @@ const chatId = (function () {
   return id
 })()
 const questionContent = ref(import.meta.env.DEV ? '查询今天的天气，并将结果以附件的形式发送给 liyuan@betamail.net' : '')
-const messages = reactive(
-  ChatMessage.from([
-    /*  {
-    id: 1,
-    question: {
-      content: 'Who are you?',
-      timestamp: 1775208323000
-    },
-    answer: {
-      content: '"I am nanobot 🐈, a personal AI assistant. I am here to help you with any tasks or questions you may have. Whether it\'s managing your schedule, providing information, or assisting with technical tasks, I\'m here to support you. How can I assist you today?",',
-      timestamp: 1775208325000
-    }
-  }*/
-  ]),
-)
+const messages = reactive(ChatMessage.from([]))
 const chatMessagesRef = useTemplateRef('chatMessagesRef')
 
 /**
@@ -68,20 +54,31 @@ const client = new ChatClient({
       metadata: { msgId, _progress, _tool_hint },
     } = data
     const message = messages.at(-1)
-
+    const timestamp = Date.now()
     if (!ok || _chatId !== chatId || method !== ChatClient.CHAT_ANSWER_METHOD || message.id !== msgId) {
       console.warn('onEvent:', data)
       return
     }
-    if (!message.answer.timestamp) {
-      message.answer.timestamp = Date.now()
-    }
+
     if (_tool_hint) {
-      // Todo: 工具调用
+      // 工具调用
+      message.answers.push(
+        new Message({
+          key: [Message.ROLE_TOOL, timestamp, messages.length].join(':'),
+          role: Message.ROLE_TOOL,
+          content,
+        }),
+      )
     } else {
-      message.answer.content += content
+      message.answers.push(
+        new Message({
+          key: [Message.ROLE_ASSISTANT, timestamp, messages.length].join(':'),
+          role: Message.ROLE_ASSISTANT,
+          content,
+        }),
+      )
     }
-    message._pending = false
+    message._progress = !!_progress
     progress.value = !!_progress
     chatMessagesRef.value?.scrollIntoView()
   },
@@ -93,10 +90,15 @@ const client = new ChatClient({
 
 client.start()
 
+/**
+ * 发送问题
+ * @param {string} questionContent 问题内容
+ */
 function onSend(questionContent) {
   if (!canSend.value) return
 
   const msgId = generateUUID()
+  const timestamp = Date.now()
 
   /**
    * @type {ChatMessage}
@@ -105,19 +107,18 @@ function onSend(questionContent) {
     new ChatMessage({
       id: msgId,
       question: {
+        key: [Message.ROLE_USER, timestamp, messages.length].join(':'),
         content: questionContent,
-        timestamp: Date.now(),
+        timestamp,
       },
-      answer: {
-        content: '',
-      },
-      _pending: true,
+      answers: [],
+      _progress: true,
     }),
   )
-
+  progress.value = true
   messages.push(message)
   chatMessagesRef.value?.scrollIntoView()
-  progress.value = true
+
   void client.request(ChatClient.CHAT_QUESTION_METHOD, {
     msgId,
     content: questionContent,

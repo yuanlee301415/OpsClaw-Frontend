@@ -89,11 +89,6 @@
 }
 */
 
-:root {
-  font-size: 14px;
-  line-height: 1.5;
-}
-
 ::-webkit-scrollbar {
   height: 8px;
   width: 8px;
