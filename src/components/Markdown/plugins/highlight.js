@@ -28,7 +28,7 @@ const highlightCode = (md, code, language, codeId) => {
     html = hljs.highlight(code, { language, ignoreIllegals: true }).value.trim()
   } catch (err) {
     html = md.utils.escapeHtml(code)
-    console.error(err)
+    console.warn(err)
   }
   html = `<code id="${codeId}">${html
     .split(/[\n\r]/g)
