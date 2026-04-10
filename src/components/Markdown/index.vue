@@ -10,6 +10,8 @@ import * as echarts from 'echarts'
 import debounce from 'lodash/debounce'
 import highlight from './plugins/highlight'
 import markdownItECharts from './plugins/markdown-it-echarts'
+import markdownItTablePaginationPlugin from './plugins/markdown-it-table-pagination'
+import tablePagination from './plugins/table-pagination'
 import { createEChartsConfig } from './echarts/config'
 import { MD_ECHARTS_CLASS_NAME } from './constants'
 
@@ -34,6 +36,9 @@ const md = markdownIt({
 })
 // ECharts 图表插件
 md.use(markdownItECharts)
+
+// 表格分页
+md.use(markdownItTablePaginationPlugin)
 
 /**
  * 图表实例
@@ -73,6 +78,7 @@ watch(
       clearTimeout(reRendererTimer)
       reRendererTimer = setTimeout(() => {
         generateCharts()
+        bindTablePagination()
       }, 500)
     })
   },
@@ -120,6 +126,11 @@ function disposeCharts() {
     chart.dispose()
     chartInstanceSet.delete(chart)
   })
+}
+
+// 表格分页
+function bindTablePagination() {
+  tablePagination(mdRef.value)
 }
 </script>
 
