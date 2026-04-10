@@ -1,6 +1,7 @@
 import { Layout, NOT_FOUND_ROUTE_NAME, NOT_FOUND_PAGE, HOME_ROUTE_NAME } from '@/router/constants.js'
 import { basicRoutes } from '@/router/routes/basic.js'
 import { testRoutes } from '@/router/routes/modules/test.js'
+import { echartsRoutes } from '@/router/routes/modules/echarts.js'
 
 /*
  * 静态路由
@@ -41,6 +42,8 @@ export const staticRoutes = [
   ...basicRoutes,
 
   testRoutes,
+
+  echartsRoutes,
 ]
 
 /*
