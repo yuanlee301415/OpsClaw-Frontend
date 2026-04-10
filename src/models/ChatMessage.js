@@ -6,8 +6,57 @@ const ROLE_USER = 'user'
 const ROLE_ASSISTANT = 'assistant'
 const ROLE_TOOL = 'tool'
 
+/**
+ * 消息内容 Model
+ */
+export class MessageContent {
+  /**
+   * 前端 Key
+   * @type {string}
+   */
+  key
+
+  /**
+   * 消息内容类型
+   * @type {'text'}
+   */
+  type = 'text'
+
+  /**
+   * 消息内容
+   * @type {string}
+   */
+  text
+
+  /**
+   * 索引
+   * @type {number}
+   */
+  static #INDEX = 0
+
+  /**
+   * @param {MessageContent} _
+   */
+  constructor(_) {
+    const { key, type, text } = { ..._ }
+    this.key = key ?? ['content', this.constructor.#INDEX++].join(':')
+    this.type = type
+    this.text = text
+  }
+
+  /**
+   * 批量实例化
+   * @param {Array} [list]
+   * @return {ChatMessage[]|*}
+   */
+  static from(list) {
+    return list?.map((_) => new this(_))
+  }
+}
+
 export class Message {
   /**
+   * 前端 Key
    * @type {string}
    */
   key
@@ -19,10 +68,10 @@ export class Message {
   role
 
   /**
-   * 消息文本内容
-   * @type {string}
+   * 消息文本内容列表
+   * @type {MessageContent[]}
    */
-  content
+  contents
 
   /**
    * 时间戳
@@ -31,19 +80,25 @@ export class Message {
   timestamp
 
   /**
-   * @param {Message} _
+   * 索引
+   * @type {number}
    */
-  constructor(_) {
-    const { key, role, content, timestamp = Date.now() } = { ..._ }
-    this.key = key
-    this.role = role
-    this.content = content
-    this.timestamp = timestamp
-  }
+  static #INDEX = 0
 
   static ROLE_USER = ROLE_USER
   static ROLE_ASSISTANT = ROLE_ASSISTANT
   static ROLE_TOOL = ROLE_TOOL
+
+  /**
+   * @param {Message} _
+   */
+  constructor(_) {
+    const { key, role, contents, timestamp = Date.now() } = { ..._ }
+    this.key = key ?? ['message', role, timestamp, this.constructor.#INDEX++].join(':')
+    this.role = role
+    this.contents = MessageContent.from(contents)
+    this.timestamp = timestamp
+  }
 
   /**
    * 获取时分
@@ -85,7 +140,6 @@ export class ChatMessage {
 
   /**
    * 持续回复中
-   * Todo: 持续分段回复 `ROLE_ASSISTANT` 消息
    * @type {boolean}
    */
   _progress
