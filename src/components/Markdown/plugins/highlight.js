@@ -46,7 +46,7 @@ const highlightCode = (md, code, language, codeId) => {
  */
 export default function highlight(md, code, language) {
   const codeId = 'code__' + ++seedId
-  let html = `<div class="${MD_CODE_BLOCK_CLASS_NAME.TOOL_CONTAINER}"><span>${language}</span><button class="${MD_CODE_BLOCK_CLASS_NAME.COPY_BUTTON} icon-button iconfont icon-fuzhi1" data-clipboard-target="#${codeId}"/></div>`
+  let html = `<div class="${MD_CODE_BLOCK_CLASS_NAME.TOOL_CONTAINER}"><span>${language}</span><button class="${MD_CODE_BLOCK_CLASS_NAME.COPY_BUTTON}" data-clipboard-target="#${codeId}"/></div>`
   html += highlightCode(md, code, language, codeId)
   return `<pre class="${MD_CODE_BLOCK_CLASS_NAME.CONTAINER}" data-language="${language}">${html}</pre>`
 }

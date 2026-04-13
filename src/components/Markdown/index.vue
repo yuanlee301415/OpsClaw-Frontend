@@ -13,7 +13,7 @@ import markdownItECharts from './plugins/markdown-it-echarts'
 import markdownItTablePaginationPlugin from './plugins/markdown-it-table-pagination'
 import tablePagination from './plugins/table-pagination'
 import { createEChartsConfig } from './echarts/config'
-import { MD_ECHARTS_CLASS_NAME } from './constants'
+import { MD_ECHARTS_CLASS_NAME, MD_CODE_BLOCK_CLASS_NAME } from './constants'
 
 defineOptions({ name: 'ChatMarkdown' })
 
@@ -68,6 +68,12 @@ const resizeObserver = new ResizeObserver(
  */
 let reRendererTimer
 
+/**
+ * 代码块“复制”按钮
+ * @type {NodeList}
+ */
+let clipboardButtons = null
+
 watch(
   () => props.text,
   (val) => {
@@ -79,6 +85,7 @@ watch(
       reRendererTimer = setTimeout(() => {
         generateCharts()
         bindTablePagination()
+        bindCopy()
       }, 500)
     })
   },
@@ -94,6 +101,7 @@ onMounted(() => {
 onUnmounted(() => {
   disposeCharts()
   resizeObserver.disconnect()
+  removeCopy()
 })
 
 // 生成图表
@@ -131,6 +139,37 @@ function disposeCharts() {
 // 表格分页
 function bindTablePagination() {
   tablePagination(mdRef.value)
+}
+
+// 复制
+function handleCopy(e) {
+  const text = document.querySelector(`${e.target.dataset.clipboardTarget}`).textContent
+  navigator.clipboard.writeText(text).then(
+    () => {
+      console.log('复制代码成功:\n', text)
+      window.$message.success('复制成功')
+    },
+    (e) => {
+      console.error('copy>err:', e)
+      window.$message.error('复制失败')
+    },
+  )
+}
+
+// 移除复制
+function removeCopy() {
+  clipboardButtons &&
+    clipboardButtons.forEach((btn) => {
+      btn.removeEventListener('click', handleCopy)
+    })
+}
+
+// 注册复制事件
+function bindCopy() {
+  clipboardButtons = mdRef.value?.querySelectorAll(`.${MD_CODE_BLOCK_CLASS_NAME.COPY_BUTTON}`)
+  clipboardButtons.forEach((btn) => {
+    btn.addEventListener('click', handleCopy)
+  })
 }
 </script>
 
